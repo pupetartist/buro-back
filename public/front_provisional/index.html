@@ -1,0 +1,39 @@
+
+
+
+
+
+
+
+<!--Img test-->
+<form id        =  "uploadForm"
+     enctype   =  "multipart/form-data"
+     action    =  "/api/photo"
+     method    =  "post"
+>
+<input type="file" name="userPhoto" />
+<input type="submit" value="Upload Image" name="submit">
+</form>
+
+
+<input type=”file” nv-file-select uploader=”uploader” options=”uploadOptions” />
+<button ng-click="submit()">Submit</button>
+
+angular
+.module(‘app’)
+.controller(‘myController’, function (currentUser, $scope, FileUploader, $sce) {
+  $scope.uploader = new FileUploader();
+  var uploadURL = ‘/api/upload/’ + currentUser._id
+  $scope.uploadOptions = {
+    queueLimit: 1,
+    autoUpload: true,
+    url: uploadURL
+  }
+ 
+  $scope.submit = function(){
+    if (!$scope.uploader.queue[0]) return;
+    $scope.uploader.queue[0].upload(); 
+  }
+}
+
+<iframe ng-src="{{pdfContent}}" width="100%" />

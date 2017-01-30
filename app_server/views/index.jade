@@ -3,3 +3,10 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+  a.btn.btn-default.pull-right(href="/profile/addreport/new/#{report._id}")
+    Add report
+    form.form-horizontal(action="", method="post", role="form")
+  
+  form.form-horizontal(action="", method="post", role="form")
+    -if (error == "val")
+    .alert.alert-danger(role="alert") All fields required, please try again
