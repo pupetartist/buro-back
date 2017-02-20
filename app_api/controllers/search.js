@@ -76,7 +76,6 @@ module.exports.searchCreate = function(req, res) {
         reportedDocument: req.body.reportedDocument,
         workPosition: req.body.workPosition,
     }, 
-    
     function(err, report) {
     if (err) {
         sendJsonResponse(res, 400, err);

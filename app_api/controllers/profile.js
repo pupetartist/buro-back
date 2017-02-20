@@ -4,7 +4,33 @@ var profile = mongoose.model('profile');
 var app = express();
 
 
-
+var User = mongoose.model('User');
+var getAuthor = function(req, res, callback) {
+    if (req.payload && req.payload.email) {
+        User
+            .findOne({ email : req.payload.email })
+            .exec(function(err, user) {
+                if (!user) {
+                    sendJSONresponse(res, 404, {
+                        "message": "User not found"
+                    });
+                return;
+                } 
+                else if (err) {
+                    console.log(err);
+                    sendJSONresponse(res, 404, err);
+                return;
+                }
+                callback(req, res, user.name);
+            });
+    } 
+    else {
+        sendJSONresponse(res, 404, {
+            "message": "User not found"
+        });
+    return;
+    }
+};
 var sendJsonResponse = function(res, status, content) {
     res.status(status);
     res.json(content);
@@ -38,26 +64,30 @@ module.exports.profileReadOne = function(req, res) {
 };
 
 module.exports.profileCreate = function(req, res) {
-    console.log('POST - /profile');
-    console.log(req.body);
-    profile.create({
-        profileid: req.body.id,
-        profileName: req.body.profileName,
-        descriptionText: req.body.descriptionText,
-        workPosition: req.body.workPosition,
-        company: req.body.workPosition,
-        profileImg: req.body.profileImg,    
-    },
-    
-    function(err, profile) {
-    if (err) {
-        sendJsonResponse(res, 400, err);
-    } 
-    else {
-        sendJsonResponse(res, 201, profile);
-    }
-    
-    });
+    getAuthor(req, res, function (req, res, userName, user) {
+        if (req.params.profileid){
+            console.log('POST - /profile');
+            console.log(req.body);
+            profile.create({
+                user: user,
+                profileid: req.body.id,
+                profileName: req.body.profileName,
+                descriptionText: req.body.descriptionText,
+                workPosition: req.body.workPosition,
+                company: req.body.workPosition,
+                profileImg: req.body.profileImg,    
+            },
+            
+            function(err, profile) {
+                if (err) {
+                    sendJsonResponse(res, 400, err);
+                } 
+                else {
+                    sendJsonResponse(res, 201, profile, userName);
+                }
+            }
+        )};
+    }); 
 };
 
 module.exports.profileUpdateOne = function (req, res) {

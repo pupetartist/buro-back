@@ -33,7 +33,8 @@ var documentSchema = new mongoose.Schema({
 
 
 
-var profileSchema = new mongoose.Schema({ 
+var profileSchema = new mongoose.Schema({
+    user: String, 
     profileid: String,
     profileName: {type:String, required: true},
     profileImg: {type: [imageSchema], required: true },
@@ -47,7 +48,7 @@ var reportSchema = new mongoose.Schema({
     reportid: String,
     reportedName: {type:String},
     reportedImage:{type: [imageSchema], required: true},
-    reportedDocument: [documentSchema],
+    reportedDocument:{type: [documentSchema], required: true},
     descriptionText: {type:String},
     workPosition: {type:String},
     company: {type:String},
@@ -58,7 +59,7 @@ var reportSchema = new mongoose.Schema({
 
 mongoose.model('profile', profileSchema);
 mongoose.model('report', reportSchema);
-mongoose.model('File', documentSchema);
-mongoose.model('Images', imageSchema);
+mongoose.model('file', documentSchema);
+mongoose.model('images', imageSchema);
 
 require('./profile');
